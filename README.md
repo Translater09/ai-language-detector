@@ -8,7 +8,6 @@ This project is a web application that detects the language of a given text and 
 
 ## Features
 - Automatic language detection
-- Confidence score for detection
 - Multi-language translation (EN, TR, ES, FR, DE, IT)
 - Flask backend + Vanilla JS frontend
 
