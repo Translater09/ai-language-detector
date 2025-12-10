@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
 
 # ------------------------------------------------------------
-# .env dosyasını yükle
+# .env yükle
 # ------------------------------------------------------------
 load_dotenv()
 
@@ -15,6 +15,9 @@ if not DETECTLANG_API_KEY:
 
 app = Flask(__name__)
 
+# ------------------------------------------------------------
+# Dil kodu -> isim map
+# ------------------------------------------------------------
 LANG_NAME_MAP = {
     "af": "Afrikaans",
     "ar": "Arabic",
@@ -82,11 +85,8 @@ LANG_NAME_MAP = {
     "ur": "Urdu",
     "uz": "Uzbek",
     "vi": "Vietnamese",
-    "zh": "Chinese"
- }
-
-   
-
+    "zh": "Chinese",
+}
 
 # ------------------------------------------------------------
 # DİL ALGILAMA - DetectLanguage
@@ -95,14 +95,13 @@ def detect_language(text: str):
     url = "https://ws.detectlanguage.com/0.2/detect"
     headers = {
         "Authorization": f"Bearer {DETECTLANG_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
     try:
         resp = requests.post(url, headers=headers, json={"q": text}, timeout=10)
 
-        print("▶ DetectLanguage Status:", resp.status_code)
-        print("▶ DetectLanguage Response:", resp.text)
+        print("▶ DetectLanguage:", resp.status_code, resp.text)
 
         if resp.status_code != 200:
             return None
@@ -122,7 +121,7 @@ def detect_language(text: str):
         return {
             "code": best["language"],
             "is_reliable": best.get("isReliable", True),
-            "confidence": best.get("confidence", 0.0)
+            "confidence": best.get("confidence", 0.0),  # sadece iç kullanım, response'a koymuyoruz
         }
 
     except Exception as e:
@@ -131,34 +130,37 @@ def detect_language(text: str):
 
 
 # ------------------------------------------------------------
-# ÇEVİRİ - LibreTranslate (Ücretsiz)
+# ÇEVİRİ - MyMemory (Ücretsiz)
 # ------------------------------------------------------------
 def translate_text(text: str, source_lang: str, target_lang: str):
+    """
+    MyMemory: https://mymemory.translated.net/doc/spec.php
+    API key'siz basic kullanım (rate limitli ama ücretsiz)
+    """
     try:
         url = "https://api.mymemory.translated.net/get"
-
         params = {
             "q": text,
-            "langpair": f"{source_lang}|{target_lang}"
+            "langpair": f"{source_lang}|{target_lang}",
         }
 
         resp = requests.get(url, params=params, timeout=15)
 
-        print("▶ MyMemory Status:", resp.status_code)
-        print("▶ MyMemory Response:", resp.text)
+        print("▶ MyMemory:", resp.status_code, resp.text[:200])
 
         if resp.status_code != 200:
             return None
 
         data = resp.json()
         translated = data.get("responseData", {}).get("translatedText")
+        if not translated:
+            return None
 
         return translated
 
     except Exception as e:
         print("❌ MyMemory Error:", repr(e))
         return None
-
 
 
 # ------------------------------------------------------------
@@ -178,12 +180,11 @@ def analyze():
 
     text = body["text"].strip()
     target_lang = body.get("target", "en").lower()
-    # Sadece güvenilir temel diller
-    ALLOWED_TARGETS = ["tr", "en", "es", "fr", "de", "it"]
 
+    # Sadece güvenilir temel diller (isteğe göre genişletebilirsin)
+    ALLOWED_TARGETS = ["tr", "en", "es", "fr", "de", "it"]
     if target_lang not in ALLOWED_TARGETS:
         target_lang = "en"
-
 
     if not text:
         return jsonify({"error": "Text is empty"}), 400
@@ -196,33 +197,29 @@ def analyze():
     source_lang = lang_info["code"]
     language_name = LANG_NAME_MAP.get(source_lang, source_lang.upper())
 
-    raw_confidence = lang_info["confidence"]
-
-    # DetectLanguage puanı (0–30) -> %0–100'e normalize
-    normalized_confidence = round(min(100, (raw_confidence / 30) * 100), 2)
-
-    is_reliable = lang_info["is_reliable"]
-
-    # Aynı dile çeviri istemesin diye otomatik değiştir
-    if target_lang == source_lang:
-        target_lang = "tr" if source_lang != "tr" else "en"
+    # DİKKAT:
+    # Daha önce burada:
+    # if target_lang == source_lang:
+    #     target_lang = "tr" if source_lang != "tr" else "en"
+    # vardı.
+    # BUNU KALDIRDIK → artık kullanıcı aynı dili isterse,
+    # source == target kalacak ve MyMemory o dilde çeviri/parafraz
+    # yapmaya çalışacak (veya neredeyse aynı metni dönecek).
 
     # 2) ÇEVİRİ
     translated = translate_text(text, source_lang, target_lang)
+    if translated is None:
+        return jsonify({"error": "Translation failed"}), 500
 
-    return jsonify({
-        "original_text": text,
-
-        "source_language_code": source_lang,
-        "source_language_name": language_name,
-
-        "confidence_raw": raw_confidence,
-        "confidence_percent": normalized_confidence,
-        "is_reliable": is_reliable,
-
-        "target_language_code": target_lang,
-        "translated_text": translated
-    })
+    return jsonify(
+        {
+            "original_text": text,
+            "source_language_code": source_lang,
+            "source_language_name": language_name,
+            "target_language_code": target_lang,
+            "translated_text": translated,
+        }
+    )
 
 
 # ------------------------------------------------------------
