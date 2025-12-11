@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Language Detector & Translator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="app-container">
+    <div class="card">
+        <h1 class="title">AI Language Detector & Translator</h1>
+        <p class="subtitle">
+            Bir kelime veya cümle yaz, sistem dili tahmin etsin ve seçtiğin dilde anlamını göstersin.
+        </p>
+
+        <label for="textInput" class="label">Metin</label>
+        <textarea id="textInput" class="textarea"
+                  placeholder="Örn: Merhaba nasılsın? veya Hello, how are you?"></textarea>
+
+        <div class="row">
+            <div class="col">
+                <label for="targetSelect" class="label">Hedef dil</label>
+                <select id="targetSelect" class="select">
+                    <option value="en" selected>English</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="es">Español (Spanish)</option>
+                    <option value="fr">Français (French)</option>
+                    <option value="de">Deutsch (German)</option>
+                    <option value="it">Italiano (Italian)</option>
+                </select>
+            </div>
+            <div class="col align-end">
+                <button id="analyzeBtn" class="button">Analiz Et</button>
+            </div>
+        </div>
+
+        <div id="result" class="result hidden">
+            <!-- JS burayı dolduracak -->
+        </div>
+
+        
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
