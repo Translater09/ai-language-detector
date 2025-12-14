@@ -181,7 +181,7 @@ def analyze():
     text = body["text"].strip()
     target_lang = body.get("target", "en").lower()
 
-    # Sadece güvenilir temel diller (isteğe göre genişletebilirsin)
+    # Sadece güvenilir temel diller
     ALLOWED_TARGETS = ["tr", "en", "es", "fr", "de", "it"]
     if target_lang not in ALLOWED_TARGETS:
         target_lang = "en"
@@ -197,12 +197,7 @@ def analyze():
     source_lang = lang_info["code"]
     language_name = LANG_NAME_MAP.get(source_lang, source_lang.upper())
 
-    # DİKKAT:
-    # Daha önce burada:
-    # if target_lang == source_lang:
-    #     target_lang = "tr" if source_lang != "tr" else "en"
-    # vardı.
-    # BUNU KALDIRDIK → artık kullanıcı aynı dili isterse,
+    
     # source == target kalacak ve MyMemory o dilde çeviri/parafraz
     # yapmaya çalışacak (veya neredeyse aynı metni dönecek).
 
