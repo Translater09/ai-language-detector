@@ -6,16 +6,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-<div class="app-container">
+
+<div class="page-wrapper">
     <div class="card">
+
         <h1 class="title">AI Language Detector & Translator</h1>
+
+        <div class="title-underline"></div>
+
         <p class="subtitle">
             Bir kelime veya cümle yaz, sistem dili tahmin etsin ve seçtiğin dilde anlamını göstersin.
         </p>
 
+        <div class="hint">
+            💡 İpucu: Uzun cümleler daha doğru sonuç verir.
+        </div>
+
         <label for="textInput" class="label">Metin</label>
         <textarea id="textInput" class="textarea"
                   placeholder="Örn: Merhaba nasılsın? veya Hello, how are you?"></textarea>
+
+        <div class="divider"></div>
 
         <div class="row">
             <div class="col">
@@ -23,25 +34,38 @@
                 <select id="targetSelect" class="select">
                     <option value="en" selected>English</option>
                     <option value="tr">Türkçe</option>
-                    <option value="es">Español (Spanish)</option>
-                    <option value="fr">Français (French)</option>
-                    <option value="de">Deutsch (German)</option>
-                    <option value="it">Italiano (Italian)</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
                 </select>
+
+                <div class="select-hint">
+                    Çeviri yapılacak hedef dili seç
+                </div>
             </div>
+
             <div class="col align-end">
-                <button id="analyzeBtn" class="button">Analiz Et</button>
+                <button id="analyzeBtn" class="button">
+                    <span class="btn-text">Analiz Et</span>
+                    <span class="spinner hidden"></span>
+                </button>
             </div>
         </div>
 
         <div id="result" class="result hidden">
-            <!-- JS burayı dolduracak -->
+            <!-- JS dolduracak -->
         </div>
 
-        
+        <div class="footer">
+            © 2025 • AI destekli dil algılama ve çeviri sistemi
+        </div>
+
     </div>
 </div>
 
+<!-- ✅ DOĞRU SCRIPT KAPANIŞI -->
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>
