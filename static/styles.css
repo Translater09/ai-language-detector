@@ -132,6 +132,8 @@ body {
     border-radius: 12px;
     border: 1px solid #cbd5f5;
     font-size: 0.95rem;
+    overflow-y: hidden;
+    resize: none;
 }
 
 .textarea {
@@ -304,4 +306,130 @@ body {
     .button {
         width: 100%;
     }
+}
+/* ===== Delete ===== */
+
+
+.align-end {
+    display: flex;             
+    justify-content: flex-end; 
+    align-items: center;       
+    gap: 10px;                 
+}
+
+
+.button.icon-only {
+    padding: 0;
+    width: 46px;              
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    border-radius: 999px;     
+}
+
+
+.button.secondary {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    color: #475569;
+    box-shadow: none;
+}
+
+.button.secondary:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #ef4444;           
+    transform: translateY(-2px);
+}
+/* ===== Typing Cursor ===== */
+.typing-cursor::after {
+    content: '|';
+    animation: blink 1s step-start infinite;
+    color: #2563eb; 
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+/* ===== Copy Button ===== */
+.result-footer {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;      
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.06); 
+}
+
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background-color: rgba(0,0,0,0.05);
+    color: #2563eb; 
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+/* ===== TOAST  ===== */
+.toast {
+    visibility: hidden;
+    min-width: 280px;
+    background-color: #1e293b;
+    color: #fff;
+    text-align: center;
+    border-radius: 50px; 
+    padding: 14px 24px;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%); 
+    font-size: 0.95rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    
+    
+    opacity: 0;
+    transition: opacity 0.3s, bottom 0.3s, visibility 0.3s;
+}
+
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px; 
+}
+/* ===== CHARACTER COUNTER ===== */
+.char-count {
+    text-align: right;       
+    font-size: 0.75rem;      
+    color: #94a3b8;          
+    margin-top: 6px;         
+    margin-right: 4px;       
+    font-weight: 500;
+    transition: color 0.3s;  
+}
+
+
+.textarea:focus + .char-count {
+    color: #64748b;
 }
