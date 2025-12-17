@@ -19,12 +19,14 @@
         </p>
 
         <div class="hint">
-            💡 İpucu: Uzun cümleler daha doğru sonuç verir.
+            💡 İpucu: Uzun cümleler daha doğru sonuç verir.  <strong>Analiz Kısayolu:Ctrl+Enter</strong> 
         </div>
 
         <label for="textInput" class="label">Metin</label>
-        <textarea id="textInput" class="textarea"
+        <textarea id="textInput" class="textarea" maxlength="5000"
                   placeholder="Örn: Merhaba nasılsın? veya Hello, how are you?"></textarea>
+
+        <div id="charCount" class="char-count">0/5000</div>
 
         <div class="divider"></div>
 
@@ -46,6 +48,9 @@
             </div>
 
             <div class="col align-end">
+                <button id="clearBtn" class="button icon-only secondary" title="Temizle">
+                🗑️
+                </button>
                 <button id="analyzeBtn" class="button">
                     <span class="btn-text">Analiz Et</span>
                     <span class="spinner hidden"></span>
@@ -63,6 +68,8 @@
 
     </div>
 </div>
+
+<div id="toast" class="toast">Metin panoya kopyalandı! 📋</div>
 
 <!-- ✅ DOĞRU SCRIPT KAPANIŞI -->
 <script src="{{ url_for('static', filename='script.js') }}"></script>
