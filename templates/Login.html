@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş Yap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="card auth-card">
+            <h1 class="title" style="text-align:center;">Giriş Yap</h1>
+            <div class="title-underline" style="margin: 10px auto;"></div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="/login" class="auth-form">
+                <label class="label">Kullanıcı Adı</label>
+                <input type="text" name="username" class="textarea input-field" required>
+
+                <label class="label">Şifre</label>
+                <input type="password" name="password" class="textarea input-field" required>
+
+                <button type="submit" class="button" style="width:100%; margin-top:20px;">Giriş Yap</button>
+            </form>
+
+            <p class="subtitle" style="text-align:center; margin-top:15px;">
+                Hesabın yok mu? <a href="/register" style="color:#2563eb; font-weight:bold;">Kayıt Ol</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

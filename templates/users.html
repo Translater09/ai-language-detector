@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Yönetim Paneli</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        
+        .btn-action {
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            margin-right: 5px;
+            display: inline-block;
+        }
+
+        .btn-edit {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+            .btn-edit:hover {
+                background-color: #cbd5e1;
+            }
+
+        .btn-delete {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+            .btn-delete:hover {
+                background-color: #fecaca;
+            }
+
+        .btn-add {
+            background-color: #10b981;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            float: right;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+            .btn-add:hover {
+                opacity: 0.9;
+            }
+
+        .hash-code {
+            font-family: monospace;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="card" style="max-width: 900px;">
+
+            <div style="overflow: hidden; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="title" style="margin:0;">⚙️ Yönetim Paneli</h1>
+                    <p style="color:#64748b; font-size: 0.9rem; margin-top: 5px;">Kullanıcıları buradan yönetebilirsiniz.</p>
+                </div>
+                <a href="/admin/add" class="btn-add">➕ Yeni Kullanıcı</a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{ category }}" style="margin-bottom: 15px;">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">ID</th>
+                            <th>Kullanıcı Adı</th>
+                            <th>Şifre (Hash)</th>
+                            <th style="width: 120px; text-align: center;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>#{{ user.id }}</td>
+                            <td>
+                                <strong>{{ user.username }}</strong>
+                                {% if user.role == 'admin' %}
+                                <span style="font-size:0.7rem; background:#0ea5e9; color:white; padding:2px 5px; border-radius:4px; margin-left:5px;">ADMIN</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="hash-code">{{ user.password }}</span></td>
+                            <td style="text-align: center;">
+                                <a href="/admin/edit/{{ user.id }}" class="btn-action btn-edit" title="Düzenle">✏️</a>
+
+                                {% if user.username != 'admin' %}
+                                <a href="/admin/delete/{{ user.id }}" class="btn-action btn-delete" title="Sil" onclick="return confirm('{{ user.username }} kullanıcısını silmek istediğine emin misin?')">🗑️</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <a href="/" class="button secondary" style="text-decoration:none;">← Ana Sayfaya Dön</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

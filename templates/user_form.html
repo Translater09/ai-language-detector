@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Kullanıcı Düzenle' if user else 'Yeni Kullanıcı' }}</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h1 { font-size: 1.5rem; color: #334155; margin-bottom: 1.5rem; text-align: center; }
+        label { display: block; margin-bottom: 0.5rem; color: #64748b; font-size: 0.9rem; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; }
+        .btn { display: inline-block; width: 100%; padding: 10px; background-color: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer; text-align: center; font-size: 1rem; text-decoration: none; }
+        .btn:hover { background-color: #1d4ed8; }
+        .btn-cancel { background-color: #94a3b8; margin-top: 10px; }
+        .btn-cancel:hover { background-color: #64748b; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>{{ 'Kullanıcıyı Düzenle' if user else 'Yeni Kullanıcı Oluştur' }}</h1>
+
+        <form method="POST">
+            <label>Kullanıcı Adı:</label>
+            <input type="text" name="username" value="{{ user.username if user else '' }}" required>
+
+            <label>Şifre:</label>
+            <input type="text" name="password" placeholder="{{ 'Değiştirmek istemiyorsanız boş bırakın' if user else 'Şifre giriniz' }}" {{ 'required' if not user else '' }}>
+
+            <label>Rol (Yetki):</label>
+            <select name="role">
+                <option value="user" {% if user and user.role == 'user' %}selected{% endif %}>User (Standart)</option>
+                <option value="admin" {% if user and user.role == 'admin' %}selected{% endif %}>Admin (Yönetici)</option>
+            </select>
+
+            <button type="submit" class="btn">Kaydet</button>
+            <a href="/admin_users" class="btn btn-cancel">İptal</a>
+        </form>
+    </div>
+
+</body>
+</html>

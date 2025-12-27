@@ -6,73 +6,113 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div id="flash-messages-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash-message" style="background-color: {{ '#fee2e2' if category == 'error' else '#dcfce7' }};
+                      color: {{ '#991b1b' if category == 'error' else '#166534' }};
+                      padding: 15px 20px;
+                      margin-bottom: 10px;
+                      border-radius: 8px;
+                      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                      display: flex;
+                      align-items: center;
+                      min-width: 300px;
+                      border: 1px solid {{ '#fca5a5' if category == 'error' else '#86efac' }};">
 
-<div class="page-wrapper">
-    <div class="card">
+            <span style="margin-right: 10px; font-size: 1.2rem;">
+                {{ '⛔' if category == 'error' else '✅' }}
+            </span>
 
-        <h1 class="title">AI Language Detector & Translator</h1>
-
-        <div class="title-underline"></div>
-
-        <p class="subtitle">
-            Bir kelime veya cümle yaz, sistem dili tahmin etsin ve seçtiğin dilde anlamını göstersin.
-        </p>
-
-        <div class="hint">
-            💡 İpucu: Uzun cümleler daha doğru sonuç verir.  <strong>Analiz Kısayolu:Ctrl+Enter</strong> 
+            <span style="font-weight: 500;">{{ message }}</span>
         </div>
-
-        <label for="textInput" class="label">Metin</label>
-        <textarea id="textInput" class="textarea" maxlength="5000"
-                  placeholder="Örn: Merhaba nasılsın? veya Hello, how are you?"></textarea>
-
-        <div id="charCount" class="char-count">0/5000</div>
-
-        <div class="divider"></div>
-
-        <div class="row">
-            <div class="col">
-                <label for="targetSelect" class="label">Hedef dil</label>
-                <select id="targetSelect" class="select">
-                    <option value="en" selected>English</option>
-                    <option value="tr">Türkçe</option>
-                    <option value="es">Español</option>
-                    <option value="fr">Français</option>
-                    <option value="de">Deutsch</option>
-                    <option value="it">Italiano</option>
-                </select>
-
-                <div class="select-hint">
-                    Çeviri yapılacak hedef dili seç
-                </div>
-            </div>
-
-            <div class="col align-end">
-                <button id="clearBtn" class="button icon-only secondary" title="Temizle">
-                🗑️
-                </button>
-                <button id="analyzeBtn" class="button">
-                    <span class="btn-text">Analiz Et</span>
-                    <span class="spinner hidden"></span>
-                </button>
-            </div>
-        </div>
-
-        <div id="result" class="result hidden">
-            <!-- JS dolduracak -->
-        </div>
-
-        <div class="footer">
-            © 2025 • AI destekli dil algılama ve çeviri sistemi
-        </div>
-
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
     </div>
-</div>
 
-<div id="toast" class="toast">Metin panoya kopyalandı! 📋</div>
+    <div class="page-wrapper">
+        <div class="card">
 
-<!-- ✅ DOĞRU SCRIPT KAPANIŞI -->
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+            <div class="card">
+
+                <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; padding-right: 20px;">
+
+                    <span style="font-size: 0.9rem; color: #64748b; margin-right: 15px;">
+                        Hoşgeldin, <b>{{ name }}</b>
+                    </span>
+
+                    {% if current_user.role == 'admin' %}
+                    <a href="/admin_users" class="button" style="background-color: #dc2626; color: white; padding: 6px 12px; font-size: 0.8rem; text-decoration: none; margin-right: 10px;">
+                        ⚙️ Yönetim Paneli
+                    </a>
+                    {% endif %}
+                    <a href="/logout" class="button secondary" style="text-decoration: none; padding: 6px 12px; font-size: 0.8rem;">
+                        Çıkış Yap
+                    </a>
+                </div>
+                <h1 class="title">AI Language Detector & Translator</h1>
+
+                <div class="title-underline"></div>
+
+                <p class="subtitle">
+                    Bir kelime veya cümle yaz, sistem dili tahmin etsin ve seçtiğin dilde anlamını göstersin.
+                </p>
+
+                <div class="hint">
+                    💡 İpucu: Uzun cümleler daha doğru sonuç verir.  <strong>Analiz Kısayolu:Ctrl+Enter</strong>
+                </div>
+
+                <label for="textInput" class="label">Metin</label>
+                <textarea id="textInput" class="textarea" maxlength="5000"
+                          placeholder="Örn: Merhaba nasılsın? veya Hello, how are you?"></textarea>
+
+                <div id="charCount" class="char-count">0/5000</div>
+
+                <div class="divider"></div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="targetSelect" class="label">Hedef dil</label>
+                        <select id="targetSelect" class="select">
+                            <option value="en" selected>English</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="it">Italiano</option>
+                        </select>
+
+                        <div class="select-hint">
+                            Çeviri yapılacak hedef dili seç
+                        </div>
+                    </div>
+
+                    <div class="col align-end">
+                        <button id="clearBtn" class="button icon-only secondary" title="Temizle">
+                            🗑️
+                        </button>
+                        <button id="analyzeBtn" class="button" style="margin-right: 20px;"
+                            <span class="btn-text">Analiz Et</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="result" class="result hidden">
+                </div>
+
+                <div class="footer">
+                    © 2025 • AI destekli dil algılama ve çeviri sistemi
+                </div>
+
+            </div>
+        </div>
+
+        <div id="toast" class="toast">Metin panoya kopyalandı! 📋</div>
+
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 </html>
