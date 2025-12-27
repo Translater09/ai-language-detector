@@ -4,7 +4,6 @@ const analyzeBtn = document.getElementById("analyzeBtn");
 const resultDiv = document.getElementById("result");
 const clearBtn = document.getElementById("clearBtn");
 const toast = document.getElementById("toast");
-// ✅ YENİ: Sayaç elementini seçiyoruz
 const charCount = document.getElementById("charCount");
 
 // --- DAKTİLO EFEKTİ ---
@@ -193,5 +192,26 @@ textInput.addEventListener('input', function() {
         charCount.style.color = "#ef4444";
     } else {
         charCount.style.color = "#94a3b8"; 
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const messages = document.querySelectorAll('.flash-message');
+
+    if (messages.length > 0) {
+      
+        setTimeout(function () {
+            messages.forEach(function (msg) {
+              
+                msg.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                msg.style.opacity = "0";
+                msg.style.transform = "translateY(-20px)";
+
+                
+                setTimeout(function () {
+                    msg.remove();
+                }, 500);
+            });
+        }, 3000); 
     }
 });
