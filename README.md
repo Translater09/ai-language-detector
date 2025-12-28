@@ -6,7 +6,7 @@ Arhan Ataş-230205018
 
 This project is a web application that detects the language of a given text and translates it into a selected target language. Additionally, it now includes a comprehensive **Management Panel** equipped with user authentication and role-based security.
 
-## 🚀 Features
+##  Features
 
 ### 🔹 Core Features
 - **Automatic Language Detection:** Uses an AI-supported API to detect the source language.
